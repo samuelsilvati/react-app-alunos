@@ -12,8 +12,9 @@ export const Nav = styled.nav`
     color: #fff;
     margin: 0 10px 0 0;
     font-weight: bold;
+    padding-left: 12px;
   }
-  span {
-    color: #000;
+  #online {
+    margin-left: 12px;
   }
 `;

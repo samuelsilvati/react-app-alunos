@@ -1,36 +1,61 @@
-// import React from 'react';
-import { useDispatch } from 'react-redux';
+import { toast } from 'react-toastify';
+import { isEmail } from 'validator';
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { get } from 'lodash';
+
 import { Container } from '../../styles/GlobalStyles';
-import { Title } from './styled';
-import * as exampleActions from '../../store/modules/example/actions';
+import { Form } from './styled';
+import * as actions from '../../store/modules/auth/actions';
+import Loading from '../../components/Loading';
 
-// import axios from '../../services/axios';
-
-export default function Login() {
-  // React.useEffect(() => {
-  //   async function getData() {
-  //     const response = await axios.get('/alunos');
-  //     console.log(response.data);
-  //   }
-  //   getData();
-  // }, []);
+export default function Login(props) {
   const dispatch = useDispatch();
+  const prevPath = get(props, 'location.state.prevPath', '/');
+  const isLoading = useSelector((state) => state.auth.isLoading);
 
-  function handleClick(e) {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleSubmit = (e) => {
     e.preventDefault();
+    let formErrors = false;
 
-    dispatch(exampleActions.clicaBotaoRequest());
-  }
+    if (!isEmail(email)) {
+      formErrors = true;
+      toast.error('E-mail inválido');
+    }
+
+    if (password.length < 6 || password.length > 255) {
+      formErrors = true;
+      toast.error('Senha inválida');
+    }
+
+    // eslint-disable-next-line no-useless-return
+    if (formErrors) return;
+
+    dispatch(actions.loginRequest({ email, password, prevPath }));
+  };
+
   return (
     <Container>
-      <Title>
-        <h1>Login</h1>
-      </Title>
-      <p>Hello World!</p>
-      <a href="/">outline</a>
-      <button type="button" onClick={handleClick}>
-        Enviar
-      </button>
+      <Loading isLoading={isLoading} />
+      <h1>Login</h1>
+      <Form onSubmit={handleSubmit}>
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Seu e-mail"
+        />
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Sua senha"
+        />
+        <button type="submit">Entrar</button>
+      </Form>
     </Container>
   );
 }

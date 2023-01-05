@@ -27,9 +27,16 @@ html, border-style, #root {
 button {
   cursor: pointer;
   background-color: ${primaryColor};
+  color: #fff;
   padding: 10px 20px;
   border-radius: 4px;
+  border: none;
   font-weight: 700;
+  transition: all .3s;
+
+  &:hover {
+    filter: brightness(85%);
+  }
 }
 
 a {
@@ -53,7 +60,7 @@ body .Toastify .Toastify__toast-container .Toastify__toast--error {
 `;
 
 export const Container = styled.section`
-  max-width: 360px;
+  max-width: 480px;
   background: #fff;
   margin: 30px auto;
   padding: 30px;
